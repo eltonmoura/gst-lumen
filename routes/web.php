@@ -13,17 +13,13 @@
 
 $router->get('/', 'HomeController@index');
 
-// CRUDL User ------------------------------------------------------------
-// Cria um novo User
-$router->post('/user', 'UserController@create');
-// Exibe um User identificado pelo Id
-$router->get('/user/{id:[0-9]+}', 'UserController@read');
-// Edita um User identificado pelo Id
-$router->patch('/user/{id:[0-9]+}', 'UserController@update');
-// Apaga um User identificado pelo Id
-$router->delete('/user/{id:[0-9]+}', 'UserController@delete');
-// Lista os Users criados
-$router->get('/user', 'UserController@list');
-// -----------------------------------------------------------------------
+// CRUDL User
+$router->group(['prefix' => 'user'], function () use ($router) {
+    $router->post('/', 'UserController@create');
+    $router->get('/{id:[0-9]+}', 'UserController@read');
+    $router->patch('/{id:[0-9]+}', 'UserController@update');
+    $router->delete('/{id:[0-9]+}', 'UserController@delete');
+    $router->get('/', 'UserController@list');
+});
 
 $router->get('/admin', 'AdminController@index');
