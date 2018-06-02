@@ -11,6 +11,19 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
-});
+$router->get('/', 'HomeController@index');
+
+// CRUDL User ------------------------------------------------------------
+// Cria um novo User
+$router->post('/user', 'UserController@create');
+// Exibe um User identificado pelo Id
+$router->get('/user/{id:[0-9]+}', 'UserController@read');
+// Edita um User identificado pelo Id
+$router->patch('/user/{id:[0-9]+}', 'UserController@update');
+// Apaga um User identificado pelo Id
+$router->delete('/user/{id:[0-9]+}', 'UserController@delete');
+// Lista os Users criados
+$router->get('/user', 'UserController@list');
+// -----------------------------------------------------------------------
+
+$router->get('/admin', 'AdminController@index');
