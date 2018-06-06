@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Log;
 
 /**
  * Classe que implementa o CRUDL de Usuários
@@ -20,6 +21,8 @@ class UserController extends Controller
     public function create(Request $request)
     {
         $postData = $request->json()->all();
+
+        Log::info('Criando um usuáro', $postData);
 
         $user = new User();
         $user->name = $postData['name'];
@@ -40,6 +43,8 @@ class UserController extends Controller
      */
     public function read(Request $request, $id)
     {
+        Log::info('Exibindo o usuáro', $id);
+
         $user = User::findOrFail($id);
         return response()->json($user, 200);
     }
@@ -55,6 +60,7 @@ class UserController extends Controller
     {
         $postData = $request->json()->all();
         $user = User::findOrFail($id);
+        $userBefore = clone $user;
 
         if (isset($postData['name'])) {
             $user->name = $postData['name'];
@@ -65,6 +71,9 @@ class UserController extends Controller
         if (isset($postData['password'])) {
             $user->password = User::encrypt($postData['password']);
         }
+
+        Log::info('Editando o Usuário', ["de" => $userBefore, "para" => $user]);
+
         $results = $user->save();
 
         return response()->json($user, 200);
@@ -80,6 +89,9 @@ class UserController extends Controller
     public function delete(Request $request, $id)
     {
         $user = User::findOrFail($id);
+
+        Log::info('Removendo um Usuário', $user);
+
         $response = $user->delete();
         return response()->json($response, 200);
     }
@@ -92,6 +104,8 @@ class UserController extends Controller
      */
     public function list(Request $request)
     {
+        Log::info('Listando os Usuários');
+
         return response()->json(User::all(), 200);
     }
 }
